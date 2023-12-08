@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title> 3D Model Fakultas Teknik UGM</title>
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.112/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.112/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+<body>
+  <div id="cesiumContainer"></div>
+  
+  <script type="module">
+    // Your access token can be found at: https://ion.cesium.com/tokens.
+    // This is the default access token from your ion account
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjMWQ4MTcxYy02N2M4LTRlMzctYjMwNi1iOGY3ODEyOWI1YjIiLCJpZCI6MTgxMTQ1LCJpYXQiOjE3MDExNDE2NDh9.5cNpP5nyd3XgzJEM59cY38McIcPyxj4GSN0bOZN26Mw';
+    
+    // Keep your Cesium.Ion.defaultAccessToken = 'your_token_here' line above. 
+    // STEP 2 CODE
+    // Initialize the viewer with Cesium World Terrain.
+    const viewer = new Cesium.Viewer('cesiumContainer', {
+      terrain: Cesium.Terrain.fromWorldTerrain(),
+    });
+    
+    // Fly the camera to Denver, Colorado at the given longitude, latitude, and height.
+    viewer.camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(110.372910, -7.763979, 1000),
+      orientation: {
+        heading: Cesium.Math.toRadians(20),
+        pitch: Cesium.Math.toRadians(-20),
+      }
+    });
+
+    // Add Cesium OSM Buildings.
+    const buildingsTileset = await Cesium.createOsmBuildingsAsync();
+    viewer.scene.primitives.add(buildingsTileset);
+    
+    // STEP 4 CODE
+    // Hide individual buildings in this area using 3D Tiles Styling language.
+    buildingsTileset.style = new Cesium.Cesium3DTileStyle({
+      // Create a style rule to control each building's "show" property.
+      show: {
+        conditions : [
+          // Any building that has this elementId will have `show = false`.
+          ['${elementId} === 	121883044', false],
+          ['${elementId} === 	121883365', false],
+          ['${elementId} === 	265567217', false],
+          ['${elementId} === 	265567214', false],
+          ['${elementId} === 	265567219', false],
+          ['${elementId} === 	265567216', false],
+          ['${elementId} === 	265567218', false],
+          ['${elementId} === 	265567216', false],
+          ['${elementId} === 	265567220', false],
+          ['${elementId} === 	364267636', false],
+          ['${elementId} === 	571860581', false],
+          ['${elementId} === 	120381150', false],
+          ['${elementId} === 	120381380', false],
+          ['${elementId} === 	121883242', false],
+          ['${elementId} === 	120381162', false],
+          // If a building does not have one of these elementIds, set `show = true`.
+          [true, true]
+        ]
+      },
+      // Set the default color style for this particular 3D Tileset.
+      // For any building that has a `cesium#color` property, use that color, otherwise make it white.
+      color: "Boolean(${feature['cesium#color']}) ? color(${feature['cesium#color']}) : color('#ffffff')"
+    });
+    
+    // STEP 6 CODE
+    // Add the 3D Tileset you created from your Cesium ion account.  
+    const newBuildingTileset1 = new Cesium.Cesium3DTileset.fromIonAssetId(2368600);
+    viewer.scene.primitives.add(newBuildingTileset1);
+    
+    const newBuildingTileset2 = await Cesium.Cesium3DTileset.fromIonAssetId(2368721);
+    viewer.scene.primitives.add(newBuildingTileset2);
+    
+    const newBuildingTileset3 = await Cesium.Cesium3DTileset.fromIonAssetId(2368812);
+    viewer.scene.primitives.add(newBuildingTileset3);
+    
+    const newBuildingTileset4 = await Cesium.Cesium3DTileset.fromIonAssetId(2368830);
+    viewer.scene.primitives.add(newBuildingTileset4);
+    
+    const newBuildingTileset5 = await Cesium.Cesium3DTileset.fromIonAssetId(2368829);
+    viewer.scene.primitives.add(newBuildingTileset5);
+    
+    const newBuildingTileset6 = await Cesium.Cesium3DTileset.fromIonAssetId(2369180);
+    viewer.scene.primitives.add(newBuildingTileset6);
+    
+    const newBuildingTileset7 = await Cesium.Cesium3DTileset.fromIonAssetId(2372377);
+    viewer.scene.primitives.add(newBuildingTileset7);
+    
+    const newBuildingTileset8 = await Cesium.Cesium3DTileset.fromIonAssetId(2372377);
+    viewer.scene.primitives.add(newBuildingTileset8);
+    
+    // Move the camera to the new building.
+    viewer.flyTo(newBuildingTileset1);
+    
+    // STEP 7 CODE
+    // Toggle the tileset's show property when the button is clicked.
+    document.querySelector('toggle-building').onclick = function() {
+      newBuildingTileset.show = !newBuildingTileset.show;
+    };
+    
+  </script>
+</body>
+</html>
